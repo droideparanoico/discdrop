@@ -9,7 +9,7 @@
         </div>
         <button class="btn btn-ghost btn-xs text-error"
                 hx-delete="/artists/{artist.mbid}"
-                hx-target="closest div.space-y-3"
+                hx-target="#artist-{artist.mbid}"
                 hx-swap="outerHTML"
                 hx-on::after-request="DiscDrop.refreshFeed()">
             Unfollow
@@ -27,7 +27,7 @@
                    hx-post="/artists/{artist.mbid}/types"
                    hx-vals='{"primaryType":"{s.primaryType}"}'
                    hx-include="this"
-                   hx-target="#feed-list"
+                   hx-target="#artist-{artist.mbid}"
                    hx-swap="innerHTML"
                    hx-on::after-request="DiscDrop.refreshFeed()"/>
             <span class="text-xs">{s.primaryType}</span>

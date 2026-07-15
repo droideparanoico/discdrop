@@ -100,7 +100,10 @@ public class ArtistResource {
                                        @FormParam("enabled") boolean enabled) {
         artistService.setTypeEnabled(mbid, primaryType, enabled);
         CompletableFuture.runAsync(() -> syncService.resyncArtist(mbid));
-        return feedFragment(0, true);
+        FollowedArtist artist = artistService.findArtist(mbid);
+        List<ArtistTypeSetting> settings = artist != null ? artistService.settingsFor(artist) : List.of();
+        return fragments_artist_row.data("artist", artist)
+                .data("settings", settings);
     }
 
     private TemplateInstance feedFragment(int offset, boolean autoRefresh) {
