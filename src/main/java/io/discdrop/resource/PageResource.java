@@ -3,6 +3,7 @@ package io.discdrop.resource;
 import io.discdrop.persistence.FollowedArtist;
 import io.discdrop.persistence.ReleaseGroupEntity;
 import io.discdrop.service.FeedService;
+import io.discdrop.service.SyncService;
 import io.quarkus.qute.Location;
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateInstance;
@@ -19,6 +20,9 @@ public class PageResource {
 
     @Inject
     FeedService feedService;
+
+    @Inject
+    SyncService syncService;
 
     @Inject
     Template index;
@@ -41,7 +45,8 @@ public class PageResource {
                 .data("nextOffset", nextOffset)
                 .data("hasMore", hasMore)
                 .data("pageSize", feedService.pageSize())
-                .data("autoRefresh", false);
+                .data("autoRefresh", false)
+                .data("syncing", syncService.isAnySyncing());
     }
 
     @GET
@@ -54,6 +59,7 @@ public class PageResource {
                 .data("hasMore", hasMore)
                 .data("pageSize", feedService.pageSize())
                 .data("autoRefresh", false)
+                .data("syncing", syncService.isAnySyncing())
                 .data("followedCount", FollowedArtist.count())
                 .data("feedCount", ReleaseGroupEntity.count());
     }

@@ -11,6 +11,7 @@ import jakarta.enterprise.event.Observes;
 import jakarta.inject.Inject;
 
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -30,6 +31,8 @@ public class SyncService {
 
     @Inject
     SettingsService settingsService;
+
+    private final Set<String> syncing = ConcurrentHashMap.newKeySet();
 
     private final ScheduledExecutorService executor =
             Executors.newSingleThreadScheduledExecutor(r -> {
@@ -73,23 +76,36 @@ public class SyncService {
         }
     }
 
-    public void syncArtist(String mbid) {
-        Set<String> enabledTypes = artistService.enabledTypes(mbid);
-        String typeFilter = enabledTypes.isEmpty() ? null : String.join("|", enabledTypes);
+    public boolean isSyncing(String mbid) {
+        return syncing.contains(mbid);
+    }
 
-        int limit = 100;
-        int offset = 0;
-        boolean more = true;
-        while (more) {
-            ReleaseGroupBrowseResult page = mbzService.browseReleaseGroups(mbid, typeFilter, limit, offset);
-            if (page == null || page.releaseGroups == null || page.releaseGroups.isEmpty()) {
-                break;
+    public boolean isAnySyncing() {
+        return !syncing.isEmpty();
+    }
+
+    public void syncArtist(String mbid) {
+        syncing.add(mbid);
+        try {
+            Set<String> enabledTypes = artistService.enabledTypes(mbid);
+            String typeFilter = enabledTypes.isEmpty() ? null : String.join("|", enabledTypes);
+
+            int limit = 100;
+            int offset = 0;
+            boolean more = true;
+            while (more) {
+                ReleaseGroupBrowseResult page = mbzService.browseReleaseGroups(mbid, typeFilter, limit, offset);
+                if (page == null || page.releaseGroups == null || page.releaseGroups.isEmpty()) {
+                    break;
+                }
+                repo.upsertPage(mbid, page.releaseGroups);
+                offset += page.releaseGroups.size();
+                more = page.releaseGroups.size() == limit && offset < page.count;
             }
-            repo.upsertPage(mbid, page.releaseGroups);
-            offset += page.releaseGroups.size();
-            more = page.releaseGroups.size() == limit && offset < page.count;
+            repo.markSynced(mbid);
+        } finally {
+            syncing.remove(mbid);
         }
-        repo.markSynced(mbid);
     }
 
     public void resyncArtist(String mbid) {

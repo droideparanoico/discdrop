@@ -34,4 +34,16 @@
         </label>
         {/for}
     </div>
+
+    {#if syncing?? && syncing}
+    <div class="flex items-center gap-2 text-sm text-base-content/60 pt-1">
+        <span class="loading loading-spinner loading-xs"></span>
+        <span>Syncing releases from MusicBrainz…</span>
+    </div>
+    <div hx-get="/artists/{artist.mbid}/row"
+         hx-target="#artist-{artist.mbid}"
+         hx-swap="innerHTML"
+         hx-trigger="load delay:3s"
+         class="hidden"></div>
+    {/if}
 </div>

@@ -68,14 +68,14 @@ public class ArtistResource {
         }
         artistService.follow(dto);
         CompletableFuture.runAsync(() -> syncService.syncArtist(mbid));
-        return feedFragment(0, true);
+        return feedFragment(0, true, true);
     }
 
     @DELETE
     @Path("/{mbid}")
     public TemplateInstance unfollow(@PathParam("mbid") String mbid) {
         artistService.unfollow(mbid);
-        return feedFragment(0, false);
+        return feedFragment(0, false, false);
     }
 
     @GET
@@ -90,7 +90,8 @@ public class ArtistResource {
         FollowedArtist artist = artistService.findArtist(mbid);
         List<ArtistTypeSetting> settings = artist != null ? artistService.settingsFor(artist) : List.of();
         return fragments_artist_row.data("artist", artist)
-                .data("settings", settings);
+                .data("settings", settings)
+                .data("syncing", syncService.isSyncing(mbid));
     }
 
     @POST
@@ -103,10 +104,11 @@ public class ArtistResource {
         FollowedArtist artist = artistService.findArtist(mbid);
         List<ArtistTypeSetting> settings = artist != null ? artistService.settingsFor(artist) : List.of();
         return fragments_artist_row.data("artist", artist)
-                .data("settings", settings);
+                .data("settings", settings)
+                .data("syncing", true);
     }
 
-    private TemplateInstance feedFragment(int offset, boolean autoRefresh) {
+    private TemplateInstance feedFragment(int offset, boolean autoRefresh, boolean syncing) {
         if (offset < 0) {
             offset = 0;
         }
@@ -117,6 +119,7 @@ public class ArtistResource {
                 .data("nextOffset", nextOffset)
                 .data("hasMore", hasMore)
                 .data("pageSize", feedService.pageSize())
-                .data("autoRefresh", autoRefresh);
+                .data("autoRefresh", autoRefresh)
+                .data("syncing", syncing);
     }
 }
