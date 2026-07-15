@@ -2,6 +2,7 @@ package io.discdrop.service;
 
 import io.discdrop.persistence.AppSetting;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.transaction.Transactional;
 
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -22,6 +23,7 @@ public class SettingsService {
         return parseTypes(raw);
     }
 
+    @Transactional
     public void setDefaultPrimaryTypes(Set<String> types) {
         AppSetting.set(KEY_DEFAULT_PRIMARY_TYPES, String.join(",", types));
     }
@@ -35,6 +37,7 @@ public class SettingsService {
         }
     }
 
+    @Transactional
     public void setSyncScheduleHours(int hours) {
         AppSetting.set(KEY_SYNC_SCHEDULE_HOURS, String.valueOf(hours));
     }

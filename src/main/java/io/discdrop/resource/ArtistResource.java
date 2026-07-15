@@ -19,6 +19,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Path("/artists")
 public class ArtistResource {
@@ -35,6 +36,10 @@ public class ArtistResource {
     @Inject
     @Location("fragments/feed-list.html")
     Template fragments_feed_list;
+
+    @Inject
+    @Location("fragments/feed-row.html")
+    Template fragments_feed_row;
 
     @Inject
     @Location("fragments/artist-row.html")
@@ -61,16 +66,16 @@ public class ArtistResource {
             dto.area = new ArtistSearchResult.ArtistDto.Area();
             dto.area.name = area;
         }
-        FollowedArtist artist = artistService.follow(dto);
-        syncService.syncArtist(artist.mbid);
-        return feedFragment(0);
+        artistService.follow(dto);
+        CompletableFuture.runAsync(() -> syncService.syncArtist(mbid));
+        return feedFragment(0, true);
     }
 
     @DELETE
     @Path("/{mbid}")
     public TemplateInstance unfollow(@PathParam("mbid") String mbid) {
         artistService.unfollow(mbid);
-        return feedFragment(0);
+        return feedFragment(0, false);
     }
 
     @GET
@@ -96,12 +101,12 @@ public class ArtistResource {
         FollowedArtist artist = artistService.findArtist(mbid);
         if (artist != null) {
             artistService.setTypeEnabled(artist, primaryType, enabled);
-            syncService.resyncArtist(mbid);
+            CompletableFuture.runAsync(() -> syncService.resyncArtist(mbid));
         }
-        return feedFragment(0);
+        return feedFragment(0, true);
     }
 
-    private TemplateInstance feedFragment(int offset) {
+    private TemplateInstance feedFragment(int offset, boolean autoRefresh) {
         if (offset < 0) {
             offset = 0;
         }
@@ -111,6 +116,7 @@ public class ArtistResource {
         return fragments_feed_list.data("rows", rows)
                 .data("nextOffset", nextOffset)
                 .data("hasMore", hasMore)
-                .data("pageSize", feedService.pageSize());
+                .data("pageSize", feedService.pageSize())
+                .data("autoRefresh", autoRefresh);
     }
 }

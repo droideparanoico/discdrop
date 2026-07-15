@@ -16,3 +16,10 @@
     <p class="text-sm">Search for an artist above and click <strong>Follow</strong> to start tracking their release groups.</p>
 </div>
 {/if}
+{#if autoRefresh?? && autoRefresh}
+<div hx-get="/feed?offset=0"
+     hx-target="#feed-list"
+     hx-swap="innerHTML"
+     hx-trigger="load delay:3s"
+     class="hidden"></div>
+{/if}

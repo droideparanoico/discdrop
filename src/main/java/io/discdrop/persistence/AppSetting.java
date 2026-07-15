@@ -29,8 +29,10 @@ public class AppSetting extends PanacheEntity {
         if (s == null) {
             s = new AppSetting();
             s.key = key;
+            s.value = value;
             s.persist();
+        } else {
+            s.value = value;
         }
-        s.value = value;
     }
 }

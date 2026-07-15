@@ -40,7 +40,8 @@ public class PageResource {
         return fragments_feed_list.data("rows", rows)
                 .data("nextOffset", nextOffset)
                 .data("hasMore", hasMore)
-                .data("pageSize", feedService.pageSize());
+                .data("pageSize", feedService.pageSize())
+                .data("autoRefresh", false);
     }
 
     @GET
@@ -52,6 +53,7 @@ public class PageResource {
                 .data("nextOffset", rows.size())
                 .data("hasMore", hasMore)
                 .data("pageSize", feedService.pageSize())
+                .data("autoRefresh", false)
                 .data("followedCount", FollowedArtist.count())
                 .data("feedCount", ReleaseGroupEntity.count());
     }
