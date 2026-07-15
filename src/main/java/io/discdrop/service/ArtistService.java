@@ -63,7 +63,11 @@ public class ArtistService {
     }
 
     @Transactional
-    public void setTypeEnabled(FollowedArtist artist, String primaryType, boolean enabled) {
+    public void setTypeEnabled(String mbid, String primaryType, boolean enabled) {
+        FollowedArtist artist = FollowedArtist.findByMbid(mbid);
+        if (artist == null) {
+            return;
+        }
         for (ArtistTypeSetting s : ArtistTypeSetting.findByArtist(artist)) {
             if (s.primaryType.equalsIgnoreCase(primaryType)) {
                 s.enabled = enabled;

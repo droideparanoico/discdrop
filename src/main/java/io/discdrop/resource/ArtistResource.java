@@ -98,11 +98,8 @@ public class ArtistResource {
     public TemplateInstance toggleType(@PathParam("mbid") String mbid,
                                        @FormParam("primaryType") String primaryType,
                                        @FormParam("enabled") boolean enabled) {
-        FollowedArtist artist = artistService.findArtist(mbid);
-        if (artist != null) {
-            artistService.setTypeEnabled(artist, primaryType, enabled);
-            CompletableFuture.runAsync(() -> syncService.resyncArtist(mbid));
-        }
+        artistService.setTypeEnabled(mbid, primaryType, enabled);
+        CompletableFuture.runAsync(() -> syncService.resyncArtist(mbid));
         return feedFragment(0, true);
     }
 

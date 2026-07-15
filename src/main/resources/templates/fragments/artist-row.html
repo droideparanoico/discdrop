@@ -20,6 +20,7 @@
         {#for s in settings}
         <label class="label cursor-pointer gap-1 badge badge-outline py-2">
             <input type="checkbox"
+                   name="enabled"
                    class="checkbox checkbox-xs"
                    value="true"
                    {#if s.enabled}checked{/if}
