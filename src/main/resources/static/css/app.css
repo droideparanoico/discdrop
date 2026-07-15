@@ -1,0 +1,3 @@
+/* DiscDrop custom styles */
+html { scroll-behavior: smooth; }
+#search-dropdown:empty { display: none; }

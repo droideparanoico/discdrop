@@ -1,0 +1,39 @@
+<div class="space-y-3">
+    <h3 class="font-bold text-lg">Settings</h3>
+
+    {#if flash == "saved"}
+    <div class="alert alert-success py-1 text-sm">Saved</div>
+    {/if}
+
+    <form hx-post="/settings" hx-target="#settings-panel-host" hx-swap="innerHTML" class="space-y-3">
+        <div>
+            <div class="text-sm font-semibold mb-1">Default primary types for new artists</div>
+            <div class="flex flex-wrap gap-2">
+                {#for t in allPrimaryTypes}
+                <label class="label cursor-pointer gap-1 badge badge-outline py-2">
+                    <input type="checkbox" name="defaultPrimaryTypes" value="{t}"
+                           class="checkbox checkbox-xs"
+                           {#if defaultPrimaryTypes.contains(t)}checked{/if}/>
+                    <span class="text-xs">{t}</span>
+                </label>
+                {/for}
+            </div>
+        </div>
+
+        <div>
+            <div class="text-sm font-semibold mb-1">Feed update schedule</div>
+            <div class="flex gap-2">
+                {#for h in scheduleOptions}
+                <label class="label cursor-pointer gap-1">
+                    <input type="radio" name="syncScheduleHours" value="{h}"
+                           class="radio radio-sm"
+                           {#if syncScheduleHours == h}checked{/if}/>
+                    <span class="text-xs">{h}h</span>
+                </label>
+                {/for}
+            </div>
+        </div>
+
+        <button class="btn btn-primary btn-sm w-full">Save</button>
+    </form>
+</div>

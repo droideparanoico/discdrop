@@ -1,0 +1,36 @@
+<div class="bg-base-100 rounded-box border border-base-300 p-3 shadow-sm space-y-3">
+    <div class="flex flex-wrap items-center gap-3">
+        <div class="flex-1 min-w-0">
+            <div class="font-semibold truncate">{artist.name}</div>
+            <div class="text-xs text-base-content/60 truncate">
+                {#if artist.disambiguation??}{artist.disambiguation}{#else}Artist{/if}
+                {#if artist.areaName??}<span class="badge badge-ghost badge-xs ml-1">{artist.areaName}</span>{/if}
+            </div>
+        </div>
+        <button class="btn btn-ghost btn-xs text-error"
+                hx-delete="/artists/{artist.mbid}"
+                hx-target="closest div.space-y-3"
+                hx-swap="outerHTML"
+                hx-on::after-request="DiscDrop.refreshFeed()">
+            Unfollow
+        </button>
+    </div>
+
+    <div class="flex flex-wrap gap-2">
+        {#for s in settings}
+        <label class="label cursor-pointer gap-1 badge badge-outline py-2">
+            <input type="checkbox"
+                   class="checkbox checkbox-xs"
+                   value="true"
+                   {#if s.enabled}checked{/if}
+                   hx-post="/artists/{artist.mbid}/types"
+                   hx-vals='{"primaryType":"{s.primaryType}"}'
+                   hx-include="this"
+                   hx-target="#feed-list"
+                   hx-swap="innerHTML"
+                   hx-on::after-request="DiscDrop.refreshFeed()"/>
+            <span class="text-xs">{s.primaryType}</span>
+        </label>
+        {/for}
+    </div>
+</div>

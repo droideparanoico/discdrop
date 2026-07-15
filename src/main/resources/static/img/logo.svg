@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48" role="img" aria-label="DiscDrop">
+  <circle cx="20" cy="20" r="16" fill="#1f2937" stroke="#0b0f19" stroke-width="1.5"/>
+  <circle cx="20" cy="20" r="12" fill="none" stroke="#374151" stroke-width="1"/>
+  <circle cx="20" cy="20" r="8"  fill="none" stroke="#374151" stroke-width="1"/>
+  <circle cx="20" cy="20" r="5"  fill="#6d28d9"/>
+  <circle cx="20" cy="20" r="1.4" fill="#0b0f19"/>
+  <path d="M34 30 L42 42" stroke="#6d28d9" stroke-width="2.4" stroke-linecap="round" opacity="0.6"/>
+  <path d="M30 34 L38 44" stroke="#6d28d9" stroke-width="2.4" stroke-linecap="round" opacity="0.35"/>
+</svg>

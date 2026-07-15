@@ -1,0 +1,39 @@
+{#if results.empty}
+{#if query?? && query.length() >= 2}
+<div class="p-3 text-sm text-base-content/60">No artists found for "{query}".</div>
+{/if}
+{/if}
+{#for a in results}
+<div class="flex items-center gap-2 p-2 hover:bg-base-200 rounded">
+    <div class="flex-1 min-w-0">
+        <div class="font-medium truncate">{a.name}</div>
+        <div class="text-xs text-base-content/60 truncate">
+            {#if a.disambiguation??}{a.disambiguation}{#else}Artist{/if}
+            {#if a.area?? && a.area.name??}<span class="badge badge-ghost badge-xs ml-1">{a.area.name}</span>{/if}
+        </div>
+    </div>
+    {#if followedMbids.contains(a.id)}
+    <form hx-delete="/artists/{a.id}"
+          hx-target="#feed-list"
+          hx-swap="innerHTML"
+          hx-on::after-request="DiscDrop.clearSearch()">
+        <button type="submit" class="btn btn-ghost btn-xs text-error">Unfollow</button>
+    </form>
+    {#else}
+    <form hx-post="/artists/follow"
+          hx-target="#feed-list"
+          hx-swap="innerHTML"
+          hx-on::after-request="DiscDrop.clearSearch()">
+        <input type="hidden" name="mbid" value="{a.id}"/>
+        <input type="hidden" name="name" value="{a.name}"/>
+        <input type="hidden" name="disambiguation" value="{a.disambiguation}"/>
+        <input type="hidden" name="type" value="{a.type}"/>
+        <input type="hidden" name="country" value="{a.country}"/>
+        {#if a.area?? && a.area.name??}
+        <input type="hidden" name="area" value="{a.area.name}"/>
+        {/if}
+        <button type="submit" class="btn btn-primary btn-xs">Follow</button>
+    </form>
+    {/if}
+</div>
+{/for}

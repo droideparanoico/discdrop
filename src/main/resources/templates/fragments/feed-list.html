@@ -1,0 +1,18 @@
+{#for row in rows}
+{#include fragments/feed-row.html row=row /}
+{/for}
+{#if hasMore}
+<button id="load-more"
+        class="btn btn-outline btn-block mt-2"
+        hx-get="/feed?offset={nextOffset}"
+        hx-target="this"
+        hx-swap="outerHTML">
+    Load more
+</button>
+{/if}
+{#if !hasMore && rows.empty}
+<div class="text-center text-base-content/60 py-12">
+    <p class="text-lg">No releases yet.</p>
+    <p class="text-sm">Search for an artist above and click <strong>Follow</strong> to start tracking their release groups.</p>
+</div>
+{/if}

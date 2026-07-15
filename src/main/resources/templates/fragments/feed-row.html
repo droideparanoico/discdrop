@@ -1,0 +1,22 @@
+<div class="flex gap-3 items-center bg-base-100 rounded-box border border-base-300 p-3 shadow-sm">
+    <img src="https://coverartarchive.org/release-group/{row.mbid}/front"
+         alt="cover"
+         loading="lazy"
+         class="w-16 h-16 rounded object-cover bg-base-200"
+         onerror="this.onerror=null;this.src='/static/img/no-cover.svg'"/>
+
+    <div class="flex-1 min-w-0">
+        <div class="flex flex-wrap items-center gap-2">
+            <span class="font-semibold truncate">{row.artist.name}</span>
+            {#if row.primaryType??}<span class="badge badge-primary badge-sm">{row.primaryType}</span>{/if}
+            {#if row.secondaryTypes??}<span class="badge badge-ghost badge-sm">{row.secondaryTypes}</span>{/if}
+        </div>
+        <a href="{row.mbzUrl}" target="_blank" rel="noopener" class="link link-hover text-base-content/90 block truncate">
+            {row.title}
+        </a>
+    </div>
+
+    <div class="text-right text-sm text-base-content/70 shrink-0">
+        {#if row.firstReleaseDateRaw??}{row.firstReleaseDateRaw}{#else}—{/if}
+    </div>
+</div>
