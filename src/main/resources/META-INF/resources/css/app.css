@@ -11,37 +11,8 @@ input[type="search"]::-webkit-search-cancel-button {
     appearance: none;
 }
 
-/* Vinyl-style cover art in feed */
-.vinyl-wrap {
-    border-radius: 50%;
-    overflow: hidden;
-    position: relative;
-    box-shadow:
-        0 0 0 3px rgba(0,0,0,0.3),
-        0 0 0 4px rgba(255,255,255,0.05),
-        0 4px 12px rgba(0,0,0,0.4);
-    background: #1a1a1a;
-}
-
-.vinyl-cover {
-    border-radius: 50%;
-    transition: transform 0.4s ease;
-}
-
-.vinyl-wrap:hover .vinyl-cover {
-    transform: rotate(8deg);
-}
-
-/* Center spindle hole */
-.vinyl-hole {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    background: #0b0f19;
-    border: 2px solid rgba(255,255,255,0.15);
-    pointer-events: none;
+/* Cover art in feed */
+.cover-art {
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 }
