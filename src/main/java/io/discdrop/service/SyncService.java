@@ -10,6 +10,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;
 import jakarta.inject.Inject;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
@@ -109,7 +111,28 @@ public class SyncService {
     }
 
     public void resyncArtist(String mbid) {
-        repo.deleteByArtistMbid(mbid);
-        syncArtist(mbid);
+        syncing.add(mbid);
+        try {
+            Set<String> enabledTypes = artistService.enabledTypes(mbid);
+            String typeFilter = enabledTypes.isEmpty() ? null : String.join("|", enabledTypes);
+
+            List<ReleaseGroupBrowseResult.ReleaseGroupDto> all = new ArrayList<>();
+            int limit = 100;
+            int offset = 0;
+            boolean more = true;
+            while (more) {
+                ReleaseGroupBrowseResult page = mbzService.browseReleaseGroups(mbid, typeFilter, limit, offset);
+                if (page == null || page.releaseGroups == null || page.releaseGroups.isEmpty()) {
+                    break;
+                }
+                all.addAll(page.releaseGroups);
+                offset += page.releaseGroups.size();
+                more = page.releaseGroups.size() == limit && offset < page.count;
+            }
+            repo.replaceForArtist(mbid, all);
+            repo.markSynced(mbid);
+        } finally {
+            syncing.remove(mbid);
+        }
     }
 }

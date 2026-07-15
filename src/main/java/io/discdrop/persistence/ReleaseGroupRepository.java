@@ -8,7 +8,10 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @ApplicationScoped
 public class ReleaseGroupRepository {
@@ -26,6 +29,25 @@ public class ReleaseGroupRepository {
         }
         for (ReleaseGroupBrowseResult.ReleaseGroupDto rg : dtos) {
             upsertOne(artist, rg);
+        }
+    }
+
+    @Transactional
+    public void replaceForArtist(String mbid, List<ReleaseGroupBrowseResult.ReleaseGroupDto> newDtos) {
+        FollowedArtist artist = FollowedArtist.findByMbid(mbid);
+        if (artist == null) {
+            return;
+        }
+        Set<String> newMbids = new HashSet<>();
+        for (ReleaseGroupBrowseResult.ReleaseGroupDto rg : newDtos) {
+            newMbids.add(rg.id);
+            upsertOne(artist, rg);
+        }
+        List<ReleaseGroupEntity> existing = ReleaseGroupEntity.list("artist", artist);
+        for (ReleaseGroupEntity rg : existing) {
+            if (!newMbids.contains(rg.mbid)) {
+                rg.delete();
+            }
         }
     }
 
