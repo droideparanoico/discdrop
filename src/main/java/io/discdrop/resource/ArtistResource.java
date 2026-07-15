@@ -17,6 +17,7 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.core.Response;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -73,9 +74,9 @@ public class ArtistResource {
 
     @DELETE
     @Path("/{mbid}")
-    public TemplateInstance unfollow(@PathParam("mbid") String mbid) {
+    public Response unfollow(@PathParam("mbid") String mbid) {
         artistService.unfollow(mbid);
-        return feedFragment(0, false, false);
+        return Response.noContent().build();
     }
 
     @GET
