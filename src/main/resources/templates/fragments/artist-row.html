@@ -10,7 +10,7 @@
         <button class="btn btn-ghost btn-xs text-error"
                 hx-delete="/artists/{artist.mbid}"
                 hx-target="#artist-{artist.mbid}"
-                hx-swap="outerHTML"
+                hx-swap="delete"
                 hx-on::after-request="DiscDrop.refreshFeed()">
             Unfollow
         </button>

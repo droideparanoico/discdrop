@@ -76,7 +76,7 @@ public class ArtistResource {
     @Path("/{mbid}")
     public Response unfollow(@PathParam("mbid") String mbid) {
         artistService.unfollow(mbid);
-        return Response.noContent().build();
+        return Response.ok("").build();
     }
 
     @GET
