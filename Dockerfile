@@ -13,5 +13,4 @@ WORKDIR /app
 COPY --from=build /build/target/quarkus-app/ /app/
 VOLUME /data
 EXPOSE 8080
-USER discdrop
 ENTRYPOINT ["java", "-XX:MinHeapFreeRatio=10", "-XX:MaxHeapFreeRatio=20", "-jar", "quarkus-run.jar"]
