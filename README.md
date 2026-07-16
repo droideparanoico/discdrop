@@ -26,4 +26,4 @@ The H2 file database lives in `./data/discdrop.mv.db` (gitignored).
 
 ## Architecture
 
-See `../discdrop-plan.md` for the full design.
+See [discdrop-plan.md](discdrop-plan.md) for the full design.
