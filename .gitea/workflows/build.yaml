@@ -1,0 +1,29 @@
+# This workflow builds DiscDrop whenever code is pushed to main.
+# The runner has Docker socket access so it can manage containers on the host.
+# See: https://docs.gitea.com/usage/actions
+
+name: Build & Deploy
+run-name: Build ${{ gitea.sha.substring(0, 7) }}
+
+on:
+  push:
+    branches: [ main ]
+
+env:
+  IMAGE_NAME: discdrop
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ env.IMAGE_NAME }}:${{ gitea.sha }} .
+          docker tag ${{ env.IMAGE_NAME }}:${{ gitea.sha }} ${{ env.IMAGE_NAME }}:latest
+
+      - name: Clean up old images
+        run: docker image prune -f --filter "until=24h"
