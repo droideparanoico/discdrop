@@ -21,5 +21,8 @@ data/
 *.mv.db
 *.trace.db
 
+# Environment (personal config)
+.env
+
 # OS
 .DS_Store

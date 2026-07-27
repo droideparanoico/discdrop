@@ -1,0 +1,12 @@
+services:
+  discdrop:
+    image: droideparanoico/discdrop
+    container_name: discdrop
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      # Configure here your data directory if you want persistence.
+      - ./data:/app/data
+    env_file:
+      - .env
