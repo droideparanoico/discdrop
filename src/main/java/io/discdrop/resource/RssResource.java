@@ -2,6 +2,7 @@ package io.discdrop.resource;
 
 import io.discdrop.persistence.ReleaseGroupEntity;
 import io.discdrop.service.FeedService;
+import io.discdrop.service.SettingsService;
 import io.quarkus.qute.Location;
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateInstance;
@@ -28,6 +29,9 @@ public class RssResource {
     FeedService feedService;
 
     @Inject
+    SettingsService settingsService;
+
+    @Inject
     @Location("rss.xml")
     Template rss;
 
@@ -40,7 +44,8 @@ public class RssResource {
     @GET
     @Produces(MediaType.APPLICATION_XML)
     public TemplateInstance feed() {
-        List<ReleaseGroupEntity> entities = feedService.latest(itemCount);
+        boolean hideFuture = settingsService.isHideFutureRss();
+        List<ReleaseGroupEntity> entities = feedService.latest(itemCount, hideFuture);
         List<RssItem> items = new ArrayList<>(entities.size());
         for (ReleaseGroupEntity e : entities) {
             String pubDate = null;

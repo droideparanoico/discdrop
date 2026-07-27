@@ -6,6 +6,7 @@ import io.discdrop.persistence.FollowedArtist;
 import io.discdrop.persistence.ReleaseGroupEntity;
 import io.discdrop.service.ArtistService;
 import io.discdrop.service.FeedService;
+import io.discdrop.service.SettingsService;
 import io.discdrop.service.SyncService;
 import io.quarkus.qute.Location;
 import io.quarkus.qute.Template;
@@ -33,6 +34,9 @@ public class ArtistResource {
 
     @Inject
     FeedService feedService;
+
+    @Inject
+    SettingsService settingsService;
 
     @Inject
     @Location("fragments/feed-list.html")
@@ -113,7 +117,8 @@ public class ArtistResource {
         if (offset < 0) {
             offset = 0;
         }
-        List<ReleaseGroupEntity> rows = feedService.feedPage(offset);
+        boolean hideFuture = settingsService.isHideFutureFeed();
+        List<ReleaseGroupEntity> rows = feedService.feedPage(offset, hideFuture);
         int nextOffset = offset + rows.size();
         boolean hasMore = rows.size() == feedService.pageSize();
         return fragments_feed_list.data("rows", rows)

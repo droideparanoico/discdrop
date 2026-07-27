@@ -37,7 +37,9 @@ public class SettingsResource {
 
     @POST
     public TemplateInstance save(@FormParam("defaultPrimaryTypes") Set<String> defaultPrimaryTypes,
-                                 @FormParam("syncScheduleHours") int syncScheduleHours) {
+                                 @FormParam("syncScheduleHours") int syncScheduleHours,
+                                 @FormParam("hideFutureFeed") boolean hideFutureFeed,
+                                 @FormParam("hideFutureRss") boolean hideFutureRss) {
         if (defaultPrimaryTypes == null) {
             defaultPrimaryTypes = Set.of();
         }
@@ -47,6 +49,8 @@ public class SettingsResource {
         if (previous != syncScheduleHours) {
             syncService.reschedule();
         }
+        settingsService.setHideFutureFeed(hideFutureFeed);
+        settingsService.setHideFutureRss(hideFutureRss);
         return buildPanel("saved");
     }
 
@@ -54,6 +58,8 @@ public class SettingsResource {
         return fragments_settings_panel
                 .data("defaultPrimaryTypes", settingsService.getDefaultPrimaryTypes())
                 .data("syncScheduleHours", settingsService.getSyncScheduleHours())
+                .data("hideFutureFeed", settingsService.isHideFutureFeed())
+                .data("hideFutureRss", settingsService.isHideFutureRss())
                 .data("allPrimaryTypes", SettingsService.ALL_PRIMARY_TYPES)
                 .data("scheduleOptions", SCHEDULE_OPTIONS)
                 .data("flash", flash);

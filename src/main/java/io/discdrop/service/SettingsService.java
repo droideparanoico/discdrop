@@ -15,6 +15,8 @@ public class SettingsService {
 
     public static final String KEY_DEFAULT_PRIMARY_TYPES = "defaultPrimaryTypes";
     public static final String KEY_SYNC_SCHEDULE_HOURS = "syncScheduleHours";
+    public static final String KEY_HIDE_FUTURE_FEED = "hideFutureFeed";
+    public static final String KEY_HIDE_FUTURE_RSS = "hideFutureRss";
 
     public static final List<String> ALL_PRIMARY_TYPES = List.of("album", "single", "ep", "broadcast", "other");
 
@@ -40,6 +42,24 @@ public class SettingsService {
     @Transactional
     public void setSyncScheduleHours(int hours) {
         AppSetting.set(KEY_SYNC_SCHEDULE_HOURS, String.valueOf(hours));
+    }
+
+    public boolean isHideFutureFeed() {
+        return Boolean.parseBoolean(AppSetting.get(KEY_HIDE_FUTURE_FEED, "false"));
+    }
+
+    @Transactional
+    public void setHideFutureFeed(boolean hide) {
+        AppSetting.set(KEY_HIDE_FUTURE_FEED, String.valueOf(hide));
+    }
+
+    public boolean isHideFutureRss() {
+        return Boolean.parseBoolean(AppSetting.get(KEY_HIDE_FUTURE_RSS, "false"));
+    }
+
+    @Transactional
+    public void setHideFutureRss(boolean hide) {
+        AppSetting.set(KEY_HIDE_FUTURE_RSS, String.valueOf(hide));
     }
 
     private Set<String> parseTypes(String raw) {

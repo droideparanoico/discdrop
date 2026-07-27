@@ -26,6 +26,9 @@ A background job refreshes release groups on a configurable schedule (6 / 12 / 2
 ### 📰 RSS feed
 A global RSS 2.0 feed with Media RSS cover art — subscribe from your reader of choice. Discoverable via `<link rel="alternate">` from the app root.
 
+### 📅 Future release filter
+Hide unreleased releases from the feed, the RSS feed, or both — independently configurable from the settings panel. Releases without a date are always shown.
+
 ### 🌗 Theme switching
 Built-in light/dark theme toggle, persisted in `localStorage`.
 
@@ -77,6 +80,8 @@ All settings are in `application.properties`. Key values can be overridden via e
 | `discdrop.rss.item-count` | — | `50` | RSS item count |
 | `discdrop.sync.default-schedule-hours` | — | `24` | Default sync interval |
 | `discdrop.sync.default-primary-types` | — | `album` | Default types for new artists |
+| `hideFutureFeed` | — | `false` | Hide unreleased from web feed |
+| `hideFutureRss` | — | `false` | Hide unreleased from RSS feed |
 
 The H2 file database lives in `./data/discdrop.mv.db`
 
